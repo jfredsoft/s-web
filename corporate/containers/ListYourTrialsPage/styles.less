@@ -1,0 +1,120 @@
+@import "../../assets/less/variables.less";
+
+.react-parallax-bgimage {
+  @media screen and (max-width: @xs) {
+    height: 1700px !important;
+  }
+}
+
+.modal-content {
+  @media screen and (max-width: @phone) {
+    margin: 0 15px !important;
+  }
+}
+
+.modal-header {
+
+  a.close {
+    margin: -11px -2px 0 0 !important;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.modal-body {
+  padding: 0 !important;
+
+  @media screen and (min-width: @phone) {
+    overflow: visible !important;
+  }
+
+  span {
+    &.text{
+      padding: 20px 25px 0px;
+      width: 100%;
+      display: inline-block;
+    }
+  }
+
+  .Select {
+    &.form-control {
+      height: inherit;
+
+      .Select-arrow-zone {
+        padding-right: 15px;
+
+        &:hover{
+
+          .Select-arrow {
+            border-top-color: #c0e890;
+          }
+        }
+
+        .Select-arrow {
+          margin: -7px 0 0;
+          border-top-color: #99cc66;
+          border-width: 10px 10px 0;
+
+          @media screen and (max-width: @xs) {
+            margin: -3px 0 0;
+            border-width: 6px 6px 0;
+          }
+        }
+      }
+
+      .Select-multi-value-wrapper {
+        padding: 0;
+
+        .Select-placeholder, .Select-value {
+          top: 0 !important;
+        }
+      }
+    }
+
+    &.is-open {
+
+      & > .Select-control {
+
+        .Select-arrow-zone {
+          padding-right: 15px;
+
+          &:hover {
+
+            .Select-arrow {
+              border-color: transparent transparent #c0e890 !important;
+            }
+          }
+
+          .Select-arrow {
+            border-color: transparent transparent #99cc66 !important;
+            border-width: 0 10px 10px;
+
+            @media screen and (max-width: @xs) {
+              margin: -3px 0 0;
+              border-width: 0 6px 6px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  input.form-control {
+    @media screen and (max-width: @phone) {
+      font-size: 16px !important;
+    }
+  }
+}
+
+.field-row + .field-row {
+  margin: 15px 0 0 !important;
+}
+
+form {
+
+  .text-right {
+    margin-top: 15px;
+  }
+}

@@ -1,0 +1,66 @@
+/* react-select styles */
+.Select.form-control {
+  padding: 0 !important;
+
+  .Select-control {
+    .Select-clear-zone {
+      display: none;
+    }
+  }
+  
+  &.has-value {
+    .Select-control {
+      .Select-clear-zone {
+        display: table-cell;
+      }
+    }
+  }
+}
+
+.Select-control {
+  border: none !important;
+  cursor: pointer;
+}
+
+.Select.is-disabled > .Select-control {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+.Select-placeholder {
+  color: @input-color !important;
+  padding-left: 15px !important;
+}
+
+.Select-menu-outer {
+  margin: 2px 0 0 -2px;
+  box-sizing: initial !important;
+  border: 2px solid #CCC;
+  z-index: 5;
+  max-height: 300px;
+  div {
+    margin: 1px;
+  }
+  .Select-option {
+    word-wrap: break-word;
+  }
+}
+
+.Select-option:last-child {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.top-positioned .Select-menu-outer {
+  top: auto;
+  bottom: 100%;
+}
+
+.Select-arrow-zone {
+  padding-right: 10px;
+}
+
+.Select-option.is-focused {
+  background-color: #00AFEF;
+  color: #FFF;
+}

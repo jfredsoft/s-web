@@ -1,0 +1,189 @@
+.client-sites {
+  .table-responsive{
+    th {
+      vertical-align: top;
+    }
+  }
+  .client-site-container {
+    .fa {
+      font-size: 1.3em;
+      margin-left: 5px;
+      vertical-align: bottom;
+      font-weight: 100;
+    }
+    .toggle-assigned-users {
+      position: relative;
+      >a {
+        margin-top: -3px;
+      }
+      .toggle {
+        width: 20px;
+        height: 20px;
+        padding: 5px;
+        background: #fff;
+        min-width: inherit;
+        position: relative;
+        margin-left: 8px;
+        border: solid #00afef 2px;
+
+        &:after,
+        &:before {
+          top: 50%;
+          left: 50%;
+          content: '';
+          background: #00afef;
+          position: absolute;
+          transition: all 0.25s;
+          transform: translate(-50%,-50%);
+        }
+
+        &:before {
+          width: 2px;
+          height: 10px;
+        }
+
+        &:after {
+          width: 10px;
+          height: 2px;
+        }
+
+        &:hover {
+          outline: none;
+          background: #fff;
+          border-color: #76daff;
+          box-shadow: none !important;
+
+          &:after,
+          &:before {
+            background: #76daff;
+          }
+        }
+
+        &.toggle-minus {
+          box-shadow: none !important;
+
+          &:before {
+            transform: translate(-50%,-50%) rotate(-90deg);
+          }
+        }
+      }
+
+    }
+    .assigned-users-list {
+      margin-top: 5px;
+
+      .assigned-user {
+        padding: 5px 0;
+
+        .edit-assigned-user {
+          .edit-icon {
+            top: -2px;
+            left: auto;
+            padding: 0;
+            right: auto;
+            color: #00afef;
+            border-width: 0;
+            font-size: 20px;
+            background: none;
+            min-width: inherit;
+            position: relative;
+            margin-left: 8px;
+
+            .pencil-square {
+              font-family: 'icomoon' !important;
+              font-style: normal;
+              font-weight: normal;
+              font-variant: normal;
+              text-transform: none;
+              line-height: 1;
+              -webkit-font-smoothing: antialiased;
+
+              &:after,
+              &:before {
+                color: #00afef;
+                transition: all 0.25s;
+              }
+
+              &:hover {
+                outline: none;
+                border-color: #76daff;
+                box-shadow: none !important;
+
+                &:after,
+                &:before {
+                  color: #76daff;
+                }
+              }
+
+              &:before {
+                content: "\e920";
+              }
+            }
+          }
+        }
+      }
+    }
+
+    td {
+      &.name, &.address, &.timezone {
+        & > span {
+          width: 10px;
+          min-width: 100%;
+          display: block;
+        }
+      }
+      &.name {
+        width: 18%;
+        .break-word();
+      }
+
+      &.principal-investigator {
+        width: auto;
+        .break-word();
+      }
+
+      &.phone, &.phoneNumber {
+        width: 17%;
+      }
+
+      &.address {
+        width: auto;
+      }
+
+      &.timezone {
+        width: 18%;
+        padding-right: 1%;
+        .break-word();
+      }
+
+      &.assigned-users {
+        width: 200px;
+      }
+
+      &.action {
+        width: 100px;
+        vertical-align: top;
+      }
+      @media screen and (min-width: @psd) {
+        &.phone, &.phoneNumber {
+          width: 17%;
+        }
+        &.timezone {
+          width: 16%;
+        }
+        &.assigned-users {
+          width: 19%;
+        }
+      }
+    }
+  }
+
+  th.th-top-arrow {
+    position: relative;
+
+    & .caret-arrow {
+      position: absolute;
+      top: 28px;
+    }
+  }
+}

@@ -1,0 +1,53 @@
+.patient-thankyou-slider {
+  .field-row {
+    height: auto;
+
+    .label {
+      width: 20%;
+    }
+
+    .field {
+      height: 100%;
+      width: 80%;
+
+      &>div{
+        height:100%;
+      }
+    }
+
+    &.sub{
+      max-height: 40px;
+      min-height: 40px;
+
+      textarea {
+        height: 40px !important;
+      }
+
+    }
+    &.msg{
+      height: 90%;
+      max-height: 90%;
+      min-height: 90%;
+    }
+
+  }
+
+  .email-block-form {
+    overflow-y: hidden !important;
+
+    .frame {
+      .field-row {
+        .label {
+          text-transform: uppercase;
+        }
+        textarea {
+          height: 100%;
+
+          &.form-control {
+            resize: none;
+          }
+        }
+      }
+    }
+  }
+}
