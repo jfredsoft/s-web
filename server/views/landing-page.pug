@@ -62,9 +62,10 @@
                       span=formatPhone(landing.clickToCallButtonNumber)
         article.landing.post
           .row
-            .centered(data-view='fadeInUp')
+            //.centered(data-view='fadeInUp')
+            .col-xs-12.col-sm-6.pull-right.in-viewport.slideInRight
               if landingDescription
-                .custom-description!=md.render(landingDescription)
+                .custom-description!=renderMarkdown(landingDescription)
               else
                 h2(class=`${landingDescription ? 'nodesc' : ''}`)=indication
                 div
@@ -89,7 +90,34 @@
                       li.gmail
                         a(href=`mailto:?subject=${landing.studyName}&body=${location.href}`)
                           i.icomoon-envelope-square
-            .col-xs-12.col-sm-6(data-view='slideInLeft')
+            .col-xs-12.col-sm-6.in-viewport(data-view='slideInLeft')
+              if imgSrc
+                if isPdfPreview
+                  .img-holder.pdf
+                    object(data=`${imgSrc}?#zoom=scale&scrollbar=1&toolbar=0&view=Fit`, width="100%", height="100%", type="application/pdf")
+                      embed(src=`${imgSrc}?#zoom=scale&scrollbar=1&toolbar=0&view=Fit`, width="100%", height="100%", type="application/pdf")
+                else
+                  .img-holder
+                    img.img-responsive(src=imgSrc, width="854", height="444", alt="preview")
+
+                // TODO: Why show it here again?
+                if landing.showSocialMediaButtons
+                  .social-area.clearfix
+                    h3.pull-left=landing.shareThisStudyText || 'Share this study:'
+                    ul.social-networks.pull-left.list-inline
+                      li.facebook
+                        a
+                          i.icomoon-facebook-square
+                      li.twitter
+                        a
+                          i.icomoon-twitter-square
+                      if imgSrc
+                        li.pinterest
+                          pinterestbutton(element='a', media='{imgSrc}')
+                            i.icomoon-pinterest-square
+                        li.gmail
+                          a(href=`mailto:?subject=${landing.studyName}&body=${location.href}`)
+                            i.icomoon-envelope-square
     footer#footer
       .footer-holder
         .container-fluid

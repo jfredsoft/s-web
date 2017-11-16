@@ -3,18 +3,22 @@ const express = require('express');
 const path = require('path');
 const request = require('request');
 const compression = require('compression');
-const rp = require('request-promise');
 const pug = require('pug');
-const Remarkable = require('remarkable');
-const libPhoneNumber = require('google-libphonenumber');
+const Promise = require('bluebird');
+const PagesService = require('../services/pages.service');
+const getLandingPageLocals = require('../views/landing-page.locals');
 
-const PNF = libPhoneNumber.PhoneNumberFormat;
-const phoneUtil = libPhoneNumber.PhoneNumberUtil.getInstance();
-const md = new Remarkable();
-md.set({
-  html: true,
-  breaks: true,
-});
+const readFile = (fs, filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, (err, file) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(file);
+      }
+    });
+  });
+};
 
 const logView = (req) => {
   const partsArr = req.url.split('-');
@@ -48,38 +52,8 @@ const logView = (req) => {
   }
 };
 
-// const reserveSsrRoutes = (app) => {
-//   // rp({
-//   //   uri: 'https://api.studykik.com/api/v1/landingPages/2835078/fetchLanding',
-//   //   json: true,
-//   // })
-//   //   .then((data) => {
-//   //     // res.render('landing-page', { data });
-//   //     console.log(path.join(__dirname, '../views/landing-page.pug'));
-//   //     console.log(data.title);
-//   //     console.log(data);
-//   //     console.log(pug.compileFile(path.join(__dirname, '../views/landing-page.pug'))({ data }));
-//   //     // res.send(pug.compileFile(path.join(__dirname, '../views/landing-page.pug'), { data }));
-//   //   })
-//   //   .catch(e => {
-//   //     // res.send(e.message);
-//   //   });
-//   app.get(/[0-9]+-*/, async (req, res) => {
-//     rp({
-//       uri: 'https://api.studykik.com/api/v1/landingPages/2835078/fetchLanding',
-//       json: true,
-//     })
-//       .then((data) => {
-//         res.send(pug.compileFile(path.join(__dirname, '../views/landing-page.pug'))({ data }));
-//       })
-//       .catch(e => {
-//         res.send(e.message);
-//       });
-//   });
-// };
-
 const addDevMiddlewares = (app, webpackConfig) => {
-// Dev middleware
+  // Dev middleware
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -129,96 +103,21 @@ const addDevMiddlewares = (app, webpackConfig) => {
     res.send('loaderio-446030d79af6fc10143acfa9b2f0613f');
   });
 
-  // reserveSsrRoutes(app);
-  app.get(/[0-9]+-*/, async (req, res) => {
-    rp({
-      uri: 'https://api.studykik.com/api/v1/landingPages/2835078/fetchLanding',
-      json: true,
-    })
-      .then((landing) => {
-        fs.readFile(path.join(compiler.outputPath, 'corporate.html'), (err, file) => {
-          if (err) {
-            res.sendStatus(404);
-          } else {
-            // Used form rendering.
-            // const indication = (landing.indication) ? landing.indication : '';
-            const city = (landing.city) ? landing.city : '';
-            const state = (landing.state) ? landing.state : '';
-            const cityAndState = (city && state) ? ` ${city}, ${state}` : '';
-            const location = landing.locationMask ? ` ${landing.locationMask}` : cityAndState;
-            const title = (landing.title) ? landing.title : indication;
-            const fullNamePlaceholder = (landing.fullNamePlaceholder) ? landing.fullNamePlaceholder : '* Full Name';
-            const emailPlaceholder = (landing.emailPlaceholder) ? landing.emailPlaceholder : '* Email';
-            const phonePlaceholder = (landing.phonePlaceholder) ? landing.phonePlaceholder : '* Mobile Phone';
-            const instructions = (landing.instructions) ? landing.instructions : 'Enter your information to join!';
-            const signupButtonText = (landing.signupButtonText) ? landing.signupButtonText : 'Sign up now!';
-            const clickToCallButtonText = (landing.clickToCallButtonText) ? landing.clickToCallButtonText : 'Click to Call!';
-            const clickToCallNumber = (landing.clickToCallButtonNumber) ? `tel:${landing.clickToCallButtonNumber}` : false;
+  app.get('/:landingId([0-9]+)-*/', async (req, res) => {
+    try {
+      const landingId = req.params.landingId;
+      const landing = await PagesService.fetchLanding(landingId);
 
-            // Used article rendering.
-            const landingDescription = (landing && landing.description && landing.description !== 'seed')
-              ? landing.description
-              : null;
-            const imgSrc = (landing && landing.imgSrc) ? landing.imgSrc : null;
-            const dataView = (imgSrc) ? 'slideInRight' : 'fadeInUp';
-            const indication = landing.indication;
-            const siteName = landing.siteName;
-            let address = landing.address;
-            const zip = landing.zip;
-            if (city) {
-              address += `, ${city}`;
-            }
-            if (state) {
-              address += `, ${state}`;
-            }
-            if (zip) {
-              address += `, ${zip}`;
-            }
-            const bySignUpText = (landing.bySignUpText) ? landing.bySignUpText :
-              'By signing up you agree to receive text messages and emails about this and similar studies near you. ' +
-              'You can unsubscribe at any time. Text messages and data rates may apply. Refer to Privacy Policy.';
-            const ifInterestedInstructions = (landing.ifInterestedInstructions) ? landing.ifInterestedInstructions :
-              'If interested, enter information above to sign up!';
+      // TODO: Considering moving outside before routes declaration for better performance.
+      const file = await readFile(fs, path.join(compiler.outputPath, 'corporate.html'));
+      const templateStr = file.toString();
 
-            const ssrStr = pug.compileFile(path.join(__dirname, '../views/landing-page.pug'))({
-              landing,
-              location,
-              title,
-              fullNamePlaceholder,
-              emailPlaceholder,
-              phonePlaceholder,
-              instructions,
-              signupButtonText,
-              clickToCallButtonText,
-              clickToCallNumber,
-              landingDescription,
-              imgSrc,
-              dataView,
-              indication,
-              siteName,
-              md,
-              address,
-              bySignUpText,
-              ifInterestedInstructions,
-              formatPhone: (phone) => {
-                let patientPhone;
-                const phoneNumber = phoneUtil.parse(phone, '');
-                const countryCode = phoneNumber.getCountryCode();
-                if (countryCode === 1) {
-                  patientPhone = phoneUtil.format(phoneNumber, PNF.NATIONAL);
-                } else {
-                  patientPhone = phoneUtil.format(phoneNumber, PNF.INTERNATIONAL);
-                }
-                return patientPhone;
-              },
-            });
-            res.send(file.toString().replace('<div id="app"></div>', ssrStr));
-          }
-        });
-      })
-      .catch(e => {
-        res.send(e.message);
-      });
+      const viewPath = path.join(__dirname, '../views/landing-page.pug');
+      const ssrContent = pug.compileFile(viewPath)(getLandingPageLocals(landing));
+      res.send(templateStr.replace('<div id="app"></div>', ssrContent));
+    } catch (e) {
+      res.send(e.message);
+    }
   });
 
   app.get('*', (req, res) => {

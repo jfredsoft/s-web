@@ -1,13 +1,19 @@
 /**
- * Created by mike on 10/16/16.
+ * View compatible lib can run on both server and client code using common-js.
  */
 
-// TODO: Cloned to common-js version in common/helpers/view.helper.js
-import libPhoneNumber from 'google-libphonenumber';
+const libPhoneNumber = require('google-libphonenumber');
+const Remarkable = require('remarkable');
+
 const PNF = libPhoneNumber.PhoneNumberFormat;
 const phoneUtil = libPhoneNumber.PhoneNumberUtil.getInstance();
+const md = new Remarkable();
+md.set({
+  html: true,
+  breaks: true,
+});
 
-export function formatPhone(phone) {
+function formatPhone(phone) {
   let patientPhone;
   const phoneNumber = phoneUtil.parse(phone, '');
   const countryCode = phoneNumber.getCountryCode();
@@ -19,7 +25,7 @@ export function formatPhone(phone) {
   return patientPhone;
 }
 
-export function normalizePhoneForServer(value) {
+function normalizePhoneForServer(value) {
   if (!value) {
     return value;
   }
@@ -30,7 +36,7 @@ export function normalizePhoneForServer(value) {
   return `+${onlyNums}`;
 }
 
-export function normalizePhoneDisplay(value) {
+function normalizePhoneDisplay(value) {
   if (!value) {
     return value;
   }
@@ -42,3 +48,14 @@ export function normalizePhoneDisplay(value) {
   }
   return `+${onlyNums}`;
 }
+
+function renderMarkdown(str) {
+  return md.render(str);
+}
+
+module.exports = {
+  formatPhone,
+  normalizePhoneForServer,
+  normalizePhoneDisplay,
+  renderMarkdown,
+};
