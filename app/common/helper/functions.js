@@ -2,6 +2,7 @@
  * Created by mike on 10/16/16.
  */
 
+// TODO: Better to make this one common-js compatible so server code can reuse it.
 import libPhoneNumber from 'google-libphonenumber';
 const PNF = libPhoneNumber.PhoneNumberFormat;
 const phoneUtil = libPhoneNumber.PhoneNumberUtil.getInstance();
