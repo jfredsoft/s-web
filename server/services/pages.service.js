@@ -1,8 +1,9 @@
 const rp = require('request-promise');
+const API_URL = process.env.API_URL;
 
 const fetchLanding = (landingId) => {
   return rp({
-    uri: `https://api.studykik.com/api/v1/landingPages/${landingId}/fetchLanding`,
+    uri: `${API_URL}/landingPages/${landingId}/fetchLanding`,
     json: true,
   });
 };

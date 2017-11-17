@@ -62,8 +62,7 @@
                       span=formatPhone(landing.clickToCallButtonNumber)
         article.landing.post
           .row
-            //.centered(data-view='fadeInUp')
-            .col-xs-12.col-sm-6.pull-right.in-viewport.slideInRight
+            .in-viewport(class=`${imgSrc ? 'col-xs-12 col-sm-6 pull-right' : 'centered'}`)
               if landingDescription
                 .custom-description!=renderMarkdown(landingDescription)
               else

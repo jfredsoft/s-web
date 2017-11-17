@@ -7,6 +7,7 @@ module.exports = (landing) => {
   const state = (landing.state) ? landing.state : '';
   const cityAndState = (city && state) ? ` ${city}, ${state}` : '';
   const location = landing.locationMask ? ` ${landing.locationMask}` : cityAndState;
+  const indication = landing.indication;
   const title = (landing.title) ? landing.title : indication;
   const fullNamePlaceholder = (landing.fullNamePlaceholder) ? landing.fullNamePlaceholder : '* Full Name';
   const emailPlaceholder = (landing.emailPlaceholder) ? landing.emailPlaceholder : '* Email';
@@ -22,7 +23,6 @@ module.exports = (landing) => {
     : null;
   const imgSrc = (landing && landing.imgSrc) ? landing.imgSrc : null;
   const dataView = (imgSrc) ? 'slideInRight' : 'fadeInUp';
-  const indication = landing.indication;
   const siteName = landing.siteName;
   let address = landing.address;
   const zip = landing.zip;
@@ -40,7 +40,7 @@ module.exports = (landing) => {
     'You can unsubscribe at any time. Text messages and data rates may apply. Refer to Privacy Policy.';
   const ifInterestedInstructions = (landing.ifInterestedInstructions) ? landing.ifInterestedInstructions :
     'If interested, enter information above to sign up!';
-  const isPdfPreview = /(?:\.([^.]+))?$/.exec(imgSrc[0]) === 'pdf';
+  const isPdfPreview = imgSrc && /(?:\.([^.]+))?$/.exec(imgSrc[0]) === 'pdf';
 
   return {
     landing,
