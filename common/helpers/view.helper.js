@@ -13,6 +13,12 @@ md.set({
   breaks: true,
 });
 
+/**
+ * Format phone number into national or international format
+ *
+ * @param {String} phone
+ * @returns {String}
+ */
 function formatPhone(phone) {
   let patientPhone;
   const phoneNumber = phoneUtil.parse(phone, '');
@@ -25,6 +31,12 @@ function formatPhone(phone) {
   return patientPhone;
 }
 
+/**
+ * Return phone number in format which is suitable for server processing.
+ *
+ * @param {String} value
+ * @returns {String}
+ */
 function normalizePhoneForServer(value) {
   if (!value) {
     return value;
@@ -36,6 +48,12 @@ function normalizePhoneForServer(value) {
   return `+${onlyNums}`;
 }
 
+/**
+ * Return phone number for good display.
+ *
+ * @param {String} value Phone number needs to be normalized
+ * @returns {String} Normalized phone number string
+ */
 function normalizePhoneDisplay(value) {
   if (!value) {
     return value;
@@ -49,6 +67,12 @@ function normalizePhoneDisplay(value) {
   return `+${onlyNums}`;
 }
 
+/**
+ * Render a string of HTML with the given markdown-complaint string.
+ *
+ * @param {String} str Input string with markdown syntax
+ * @returns {String}
+ */
 function renderMarkdown(str) {
   return md.render(str);
 }

@@ -111,5 +111,4 @@ if (MIXPANEL_TOKEN) {
   mixpanel.init(MIXPANEL_TOKEN);
 }
 
-
 render();
