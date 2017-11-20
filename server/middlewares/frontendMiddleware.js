@@ -67,8 +67,29 @@ const reserveSsrRoutes = (app, fs, templatePath) => {
       const file = await readFile(fs, templatePath);
       const templateStr = file.toString();
       const viewPath = path.join(__dirname, '../views/landing-page.pug');
-      const ssrContent = pug.compileFile(viewPath)(getLandingPageLocals(landing));
-      res.send(templateStr.replace('<div id="app"></div>', ssrContent));
+      const locals = getLandingPageLocals(landing);
+      const ssrContent = pug.compileFile(viewPath)(locals);
+
+      // Meta tags an be put inside body, but better to put inside head tag to be a valid HTML.
+      const result = templateStr
+        .replace('<div id="app"></div>', ssrContent)
+        .replace(
+          '<meta property="og:title" content="StudyKIK">',
+          `<meta property="og:title" content="${locals.title}">`
+        )
+        .replace(
+          '<meta property="og:description" content="StudyKIK">',
+          `<meta property="og:description" content="${locals.landing.studyName}">`
+        )
+        .replace(
+          '<meta property="og:image" content="">',
+          `<meta property="og:image" content="${locals.imgSrc || ''}">`
+        )
+        .replace(
+          '<meta property="og:url" content="">',
+          `<meta property="og:url" content="${req.url}">`
+        );
+      res.send(result);
     } catch (e) {
       res.send(e.message);
     }
