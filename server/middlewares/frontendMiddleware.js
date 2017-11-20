@@ -3,6 +3,22 @@ const express = require('express');
 const path = require('path');
 const request = require('request');
 const compression = require('compression');
+const pug = require('pug');
+const Promise = require('bluebird');
+const PagesService = require('../services/pages.service');
+const getLandingPageLocals = require('../views/landing-page.locals');
+
+const readFile = (fs, filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, (err, file) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(file);
+      }
+    });
+  });
+};
 
 const logView = (req) => {
   const partsArr = req.url.split('-');
@@ -36,8 +52,31 @@ const logView = (req) => {
   }
 };
 
+/**
+ * Making specific routes to be rendered on server.
+ *
+ * @param {Object} app Express server app instance
+ * @param {Object} fs File system utility
+ * @param {String} templatePath Path to React HTML template
+ */
+const reserveSsrRoutes = (app, fs, templatePath) => {
+  app.get('/:landingId([0-9]+)-*/', async (req, res) => {
+    try {
+      const landingId = req.params.landingId;
+      const landing = await PagesService.fetchLanding(landingId);
+      const file = await readFile(fs, templatePath);
+      const templateStr = file.toString();
+      const viewPath = path.join(__dirname, '../views/landing-page.pug');
+      const ssrContent = pug.compileFile(viewPath)(getLandingPageLocals(landing));
+      res.send(templateStr.replace('<div id="app"></div>', ssrContent));
+    } catch (e) {
+      res.send(e.message);
+    }
+  });
+};
+
 const addDevMiddlewares = (app, webpackConfig) => {
-// Dev middleware
+  // Dev middleware
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -87,6 +126,8 @@ const addDevMiddlewares = (app, webpackConfig) => {
     res.send('loaderio-446030d79af6fc10143acfa9b2f0613f');
   });
 
+  reserveSsrRoutes(app, fs, path.join(compiler.outputPath, 'corporate.html'));
+
   app.get('*', (req, res) => {
     logView(req);
     fs.readFile(path.join(compiler.outputPath, 'corporate.html'), (err, file) => {
@@ -131,6 +172,8 @@ const addProdMiddlewares = (app, options) => {
   app.get('/loaderio-446030d79af6fc10143acfa9b2f0613f', (req, res) => {
     res.send('loaderio-446030d79af6fc10143acfa9b2f0613f');
   });
+
+  reserveSsrRoutes(app, require('fs'), path.resolve(outputPath, 'corporate.html'));
 
   app.get('*', (req, res) => {
     logView(req);
