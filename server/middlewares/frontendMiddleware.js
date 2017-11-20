@@ -70,8 +70,9 @@ const reserveSsrRoutes = (app, fs, templatePath) => {
       const locals = getLandingPageLocals(landing);
       const ssrContent = pug.compileFile(viewPath)(locals);
 
-      // Meta tags an be put inside body, but better to put inside head tag to be a valid HTML.
+      // Meta tags can be put inside body, but better to put inside head tag to be a valid HTML.
       const result = templateStr
+        // If there are no needs for SSR for SEO purpose, just comment out below line and just keep medias tags as SSR.
         .replace('<div id="app"></div>', ssrContent)
         .replace(
           '<meta property="og:title" content="StudyKIK">',
